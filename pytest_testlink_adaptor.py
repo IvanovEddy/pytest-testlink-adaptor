@@ -448,6 +448,23 @@ def report_result(test_name, status, duration, build=None, platform=None):
                                      user=TLINK.conf['tester'],
                                      execduration='%.2f'
                                      % round(duration/60, 2))
+            
+            response = TLINK.rpc.reportTCResult(testplanid=TLINK.test_plan_id,
+                                     buildid=build_id,
+                                     platformname=platform_name,
+                                     status=status,
+                                     testcaseexternalid=test_id,
+                                     user=TLINK.conf['tester'],
+                                     execduration='%.2f'
+                                     % round(duration / 60, 2))
+            print(response)
+
+            # create screenshot name with first letters and send screenshot
+            testname_list = test_name.split("_")
+            first_letters = "".join([word[0] for word in testname_list])
+            if status == 'f':
+                print(TLINK.rpc.uploadExecutionAttachment(f'C:\\Users\\79773\\PycharmProjects\\Python_sandbox\\screenshot\\{first_letters}.png', response[0]['id'],
+                                                      'Attachment Title','Attachment Title'))
 
             print('TestLink {tc}: {status}'.format(tc=test_id, status=status))
 
